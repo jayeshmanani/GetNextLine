@@ -6,7 +6,7 @@
 /*   By: jmanani <jmanani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:15:25 by jmanani           #+#    #+#             */
-/*   Updated: 2025/11/06 17:26:52 by jmanani          ###   ########.fr       */
+/*   Updated: 2025/11/06 17:27:15 by jmanani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,18 @@ char	*ft_strdup(const char *src)
 		dup[i] = src[i];
 	dup[i] = '\0';
 	return (dup);
+}
+
+char	*ft_strchr(const char *s, int c)
+{
+	while (*s != '\0')
+	{
+		if (*s++ == (char)c)
+			return ((char *)(s - 1));
+	}
+	if (*s == '\0' && (char)c != '\0')
+		return (NULL);
+	return ((char *)s);
 }
 
 char	*ft_strjoin(char const *s1, char const *s2)
