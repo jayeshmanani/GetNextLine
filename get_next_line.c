@@ -6,7 +6,7 @@
 /*   By: jmanani <jmanani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:15:25 by jmanani           #+#    #+#             */
-/*   Updated: 2025/11/06 17:27:15 by jmanani          ###   ########.fr       */
+/*   Updated: 2025/11/06 18:14:41 by jmanani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,11 +99,43 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 
 char	*get_next_line(int fd)
 {
-	int		size_read;
-	char	*buff;
+	static char	*op;
+	int			size_read;
+	char		buff[BUFFER_SIZE + 1];
+	char		*line;
+	char		*temp;
+	char		*nl_found;
 
-	buff = read_the_data(fd);
-	return (buff);
+	if (fd < 0 || read(fd, buff, 0) != 0)
+		return (NULL);
+	size_read = read(fd, buff, BUFFER_SIZE);
+	if (size_read <= 0)
+	{
+		return (NULL);
+	}
+	if (!op)
+		op = "";
+	op = ft_strjoin(op, buff);
+	nl_found = ft_strchr(op, '\n');
+	while (!nl_found)
+	{
+		temp = op;
+		size_read = read(fd, buff, BUFFER_SIZE);
+		if (size_read <= 0)
+		{
+			free(op);
+			return (NULL);
+		}
+		op = ft_strjoin(op, buff);
+		free(temp);
+		nl_found = ft_strchr(op, '\n');
+	}
+	if (nl_found)
+	{
+		line = ft_substr(op, 0, nl_found - op + 1);
+		op = ft_strdup(++nl_found);
+	}
+	return (line);
 }
 
 int	main(void)
@@ -115,13 +147,11 @@ int	main(void)
 	fd = -1;
 	fd = open("test.txt", O_RDONLY);
 	i = 0;
-	printf("Our FD is: %d\n", fd);
+	printf("Our FD is: %d", fd);
 	if (fd != -1)
 		nl = get_next_line(fd);
-	while ((fd != -1) && (1) && i++ < 10)
+	while (nl != NULL)
 	{
-		if (nl == NULL)
-			break ;
 		printf("%s\n", nl);
 		free(nl);
 		nl = get_next_line(fd);
