@@ -6,11 +6,21 @@
 /*   By: jmanani <jmanani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:15:25 by jmanani           #+#    #+#             */
-/*   Updated: 2025/11/06 17:23:13 by jmanani          ###   ########.fr       */
+/*   Updated: 2025/11/06 17:25:29 by jmanani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+size_t	ft_strlen(const char *s)
+{
+	size_t	count;
+
+	count = 0;
+	while (s[count] != '\0')
+		count++;
+	return (count);
+}
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
