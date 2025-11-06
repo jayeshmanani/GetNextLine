@@ -6,7 +6,7 @@
 /*   By: jmanani <jmanani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:15:25 by jmanani           #+#    #+#             */
-/*   Updated: 2025/11/06 20:09:19 by jmanani          ###   ########.fr       */
+/*   Updated: 2025/11/06 20:09:33 by jmanani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,7 @@ char	*get_next_line(int fd)
 		return (NULL);
 	size_read = read(fd, buff, BUFFER_SIZE);
 	if (size_read <= 0 && NULL == op)
-	{
 		return (NULL);
-	}
 	else if (size_read == 0 && *op){
 		eof = ft_strchr(op, '\0');
 		line = ft_substr(op, 0, eof - op - 1);
