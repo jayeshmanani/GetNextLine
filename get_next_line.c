@@ -6,7 +6,7 @@
 /*   By: jmanani <jmanani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:15:25 by jmanani           #+#    #+#             */
-/*   Updated: 2025/11/07 15:51:07 by jmanani          ###   ########.fr       */
+/*   Updated: 2025/11/07 17:46:19 by jmanani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,24 +47,31 @@ size_t	ft_strlen(const char *s)
 	return (count);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char const *s2)
 {
 	int		len;
 	char	*new_str;
+	char	*temp;
 
-	if (!s1 || !s2)
+	temp = s1;
+	if (!s1 && !s2)
 		return (NULL);
+	if (!s1)
+		return (ft_strdup(s2));
+	if (!s2 || !*s2)
+		return (s1);
 	len = ft_strlen(s1) + ft_strlen(s2);
 	if (!len)
-		return (ft_strdup(""));
+		return (NULL);
 	new_str = (char *)malloc(sizeof(char) * (len + 1));
 	if (!new_str)
 		return (NULL);
-	while (*s1)
+	while (*s1 != '\0')
 		*(new_str++) = *(s1++);
-	while (*s2)
+	while (*s2 != '\0')
 		*(new_str++) = *(s2++);
 	*new_str = '\0';
+	free(temp);
 	return (new_str - len);
 }
 
@@ -75,6 +82,8 @@ char	*ft_strdup(const char *src)
 	int		i;
 
 	len = ft_strlen(src);
+	// if(len == 0)
+	// 	return (NULL);
 	dup = (char *)malloc(len + 1);
 	if (!dup)
 		return (0);
@@ -97,118 +106,85 @@ char	*ft_strchr(const char *s, int c)
 	return ((char *)s);
 }
 
-int	read_file(int fd, char *buff)
+void	*ft_memmove(void *dest, const void *src, size_t n)
 {
-	int	size_read;
+	size_t	i;
 
-	size_read = read(fd, buff, BUFFER_SIZE);
-	if (size_read <= 0)
-	{
-		free(buff);
-		buff = NULL;
-		return (size_read);
-	}
-	buff[size_read] = '\0';
-	return (size_read);
-}
-
-char	*join_data(char *data, char *buff)
-{
-	char	*temp;
-
-	temp = data;
-	data = ft_strjoin(data, buff);
-	free(temp);
-	temp = NULL;
-	return (data);
-}
-
-char	*ft_read_data(int fd, char *data, char **buff)
-{
-	int	read_success;
-
-	while (!ft_strchr(data, '\n'))
-	{
-		read_success = read_file(fd, *buff);
-		if (read_success <= 0)
-		{
-			if (*data && read_success != -1)
-				return (data);
-			free(data);
-			return (NULL);
-		}
-		data = join_data(data, *buff);
-		if (!data)
-			return (NULL);
-	}
-	free(*buff);
-	return (data);
-}
-
-char	*ft_extract_nl(char **data)
-{
-	char	*line;
-	char	*nl;
-	char	*temp;
-
-	nl = NULL;
-	if (!(*data))
+	i = 0;
+	if (dest == 0 && src == 0)
 		return (NULL);
-	nl = ft_strchr(*data, '\n');
-	if (!nl)
-		nl = ft_strchr(*data, '\0');
-	line = ft_substr(*data, 0, nl - *data + 1);
-	temp = *data;
-	if (*(nl + 1) != '\0' && '\0' != *nl)
-		*data = ft_strdup(nl + 1);
+	if (dest <= src)
+	{
+		while (i++ < n)
+			*(char *)dest++ = *(char *)src++;
+		return ((void *)(dest - n));
+	}
+	else if (dest > src)
+	{
+		dest += n - 1;
+		src += n - 1;
+		while (i++ < n)
+			*(char *)dest-- = *(char *)src--;
+	}
+	return (dest + 1);
+}
+
+void	update_buffer(char *buff)
+{
+	char	*ptr;
+
+	ptr = ft_strchr(buff, '\n');
+	if (ptr && *(ptr + 1))
+		ft_memmove(buff, ptr, ft_strlen(ptr));
 	else
-		*data = NULL;
-	free(temp);
-	return (line);
+		*buff = '\0';
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*data;
+	static char	buff[BUFFER_SIZE + 1];
 	char		*line;
-	char		*buff;
+	int			size_read;
 
-	buff = NULL;
-	if ((fd < 0) || (BUFFER_SIZE <= 0) || (!BUFFER_SIZE))
+	if ((fd < 0) || (BUFFER_SIZE <= 0))
+		return (NULL);
+	size_read = 1;
+	line = ft_strjoin(NULL, buff);
+	while (ft_strchr(line, '\n') == NULL && size_read > 0)
 	{
-		return (NULL);
+		size_read = read(fd, buff, BUFFER_SIZE);
+		if (size_read < 0)
+			return (free(line), (NULL));
+		buff[size_read] = '\0';
+		line = ft_strjoin(line, buff);
+		if (!line || !*line)
+			return (free(line), NULL);
 	}
-	buff = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
-	if (!buff)
-		return (NULL);
-	if (!data)
-		data = ft_strdup("");
-	data = ft_read_data(fd, data, &buff);
-	if (data == NULL)
-		return (NULL);
-	line = ft_extract_nl(&data);
-	if (!line)
-		free(data);
+	if (size_read == 0 && *line == '\0')
+		return (free(line), NULL);
+	if (ft_strchr(line, '\n'))
+		line = ft_substr(line, 0, ft_strchr(line, '\n') - line + 1);
+	update_buffer(buff);
 	return (line);
 }
 
-// int	main(void)
-// {
-// 	int		fd;
-// 	char	*nl;
+int	main(void)
+{
+	int		fd;
+	char	*nl;
 
-// 	nl = NULL;
-// 	fd = -1;
-// 	fd = open("test.txt", O_RDONLY);
-// 	printf("Our FD is: %d\n", fd);
-// 	nl = get_next_line(fd);
-// 	while (nl != NULL)
-// 	{
-// 		printf("%s", nl);
-// 		free(nl);
-// 		nl = get_next_line(fd);
-// 	}
-// 	// free(nl);
-// 	close(fd);
-// 	return (0);
-// }
+	nl = NULL;
+	fd = -1;
+	fd = open("test.txt", O_RDONLY);
+	printf("Our FD is: %d\n", fd);
+	nl = get_next_line(fd);
+	while (nl != NULL)
+	{
+		printf("%s", nl);
+		free(nl);
+		nl = get_next_line(fd);
+	}
+	free(nl);
+	close(fd);
+	return (0);
+}
