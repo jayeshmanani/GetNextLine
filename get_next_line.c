@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmanani <jmanani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jay <jay@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:15:25 by jmanani           #+#    #+#             */
-/*   Updated: 2025/11/06 21:21:54 by jmanani          ###   ########.fr       */
+/*   Updated: 2025/11/07 01:32:03 by jay              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ char	*ft_strchr(const char *s, int c)
 	return ((char *)s);
 }
 
-char	*read_data(int fd)
+char	*read_file(int fd)
 {
 	char	*buff;
 	int		size_read;
@@ -113,10 +113,9 @@ char	*read_data(int fd)
 	return (buff);
 }
 
-char	*create_new_str(char *op, char *buff, char c)
+char	*join_data(char *op, char *buff)
 {
 	char	*temp;
-	char	*addr_found;
 
 	temp = op;
 	op = ft_strjoin(op, buff);
@@ -125,62 +124,64 @@ char	*create_new_str(char *op, char *buff, char c)
 	return (op);
 }
 
+
+char    *ft_read_data(int fd, char *data)
+{
+    char    *buff;
+	
+    if (!data)
+        data = ft_strdup("");
+    while (!ft_strchr(data, '\n'))
+    {
+        buff = read_file(fd);
+        if (!buff)
+        {
+            if (*data)
+                return (data);
+            free(data);
+            return (NULL);
+        }
+        data = join_data(data, buff);
+        if (!data)
+            return (NULL);
+    }
+    return (data);
+}
+
+char    *ft_extract_nl(char **data)
+{
+    char    *line;
+    char    *nl;
+    char    *temp;
+
+    if (!(*data))
+        return (NULL);
+    nl = ft_strchr(*data, '\n');
+    if (!nl)
+        nl = ft_strchr(*data, '\0');
+    line = ft_substr(*data, 0, nl - *data + 1);
+    temp = *data;
+    *data = NULL;
+    if (*(nl + 1) != '\0')
+        *data = ft_strdup(nl + 1);
+    free(temp);
+    return (line);
+}
+
+
 char	*get_next_line(int fd)
 {
-	static char	*op;
-	int			size_read;
-	char		*buff;
+	static char	*data;
 	char		*line;
-	char		*temp;
-	char		*nl_found;
-	char		*eof;
-
+	data = NULL;
 	if (fd < 0 && BUFFER_SIZE <= 0)
 		return (NULL);
-	buff = read_data(fd);
-	if (NULL == buff && NULL == op)
-		return (NULL);
-	else if (NULL == buff && *op)
-	{
-		temp = op;
-		eof = ft_strchr(op, '\n');
-		if (eof == NULL)
-			eof = ft_strchr(op, '\0');
-		line = ft_substr(op, 0, eof - op + 1);
-		op = ft_strdup(++eof);
-		if (*op == '\0')
-		{
-			free(op);
-			op = NULL;
-		}
-		free(temp);
-		return (line);
-	}
-	if (!op)
-		op = ft_strdup("");
-	op = create_new_str(op, buff, '\n');
-	nl_found = ft_strchr(op, '\n');
-	while (!nl_found)
-	{
-		buff = read_data(fd);
-		if (NULL == buff)
-			break ;
-		op = create_new_str(op, buff, '\n');
-		nl_found = ft_strchr(op, '\n');
-	}
-	if (nl_found)
-	{
-		temp = op;
-		line = ft_substr(op, 0, nl_found - op + 1);
-		op = ft_strdup(++nl_found);
-		free(temp);
-	}
-	else if (*op)
-	{
-		eof = ft_strchr(op, '\0');
-		line = ft_substr(op, 0, eof - op + 1);
-		free(op);
-	}
+	data = ft_read_data(fd, data);
+    if (data == NULL)
+        return (NULL);
+    line = ft_extract_nl(&data);
+	 if (!line)
+        free(data);
 	return (line);
 }
 
@@ -188,11 +189,9 @@ int	main(void)
 {
 	int		fd;
 	char	*nl;
-	int		i;
 
 	fd = -1;
 	fd = open("test.txt", O_RDONLY);
-	i = 0;
 	printf("Our FD is: %d", fd);
 	if (fd != -1)
 		nl = get_next_line(fd);
@@ -202,7 +201,7 @@ int	main(void)
 		free(nl);
 		nl = get_next_line(fd);
 	}
-	free(nl);
+	// free(nl);
 	close(fd);
 	return (0);
 }
