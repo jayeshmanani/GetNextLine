@@ -6,7 +6,7 @@
 /*   By: jay <jay@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:15:25 by jmanani           #+#    #+#             */
-/*   Updated: 2025/11/07 01:32:03 by jay              ###   ########.fr       */
+/*   Updated: 2025/11/07 01:44:17 by jay              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,15 +113,15 @@ char	*read_file(int fd)
 	return (buff);
 }
 
-char	*join_data(char *op, char *buff)
+char	*join_data(char *data, char *buff)
 {
 	char	*temp;
 
-	temp = op;
-	op = ft_strjoin(op, buff);
+	temp = data;
+	data = ft_strjoin(data, buff);
 	free(buff);
 	free(temp);
-	return (op);
+	return (data);
 }
 
 
@@ -161,7 +161,7 @@ char    *ft_extract_nl(char **data)
         nl = ft_strchr(*data, '\0');
     line = ft_substr(*data, 0, nl - *data + 1);
     temp = *data;
-    *data = NULL;
+    // *data = NULL;
     if (*(nl + 1) != '\0')
         *data = ft_strdup(nl + 1);
     free(temp);
