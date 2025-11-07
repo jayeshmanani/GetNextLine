@@ -6,7 +6,7 @@
 /*   By: jmanani <jmanani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:15:25 by jmanani           #+#    #+#             */
-/*   Updated: 2025/11/07 18:11:37 by jmanani          ###   ########.fr       */
+/*   Updated: 2025/11/07 18:19:16 by jmanani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ void	update_buffer(char *buff)
 
 	ptr = ft_strchr(buff, '\n');
 	if (ptr && *(ptr + 1))
-		ft_memmove(buff, ptr, ft_strlen(ptr));
+		ft_memmove(buff, ptr+1, ft_strlen(ptr)+1);
 	else
 		*buff = '\0';
 }
