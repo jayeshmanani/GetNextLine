@@ -6,7 +6,7 @@
 /*   By: jmanani <jmanani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:15:45 by jmanani           #+#    #+#             */
-/*   Updated: 2025/11/07 18:02:26 by jmanani          ###   ########.fr       */
+/*   Updated: 2025/11/07 18:39:07 by jmanani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 5
+#  define BUFFER_SIZE 10
 # endif
 
 # include <fcntl.h>

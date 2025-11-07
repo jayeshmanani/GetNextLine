@@ -6,7 +6,7 @@
 /*   By: jmanani <jmanani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:15:25 by jmanani           #+#    #+#             */
-/*   Updated: 2025/11/07 18:19:16 by jmanani          ###   ########.fr       */
+/*   Updated: 2025/11/07 18:43:28 by jmanani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,7 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 	size_t	str_len;
 	size_t	actual_len;
 	size_t	i;
-	char *temp;
-	
-	temp = s;
+
 	actual_len = len;
 	i = 0;
 	str_len = ft_strlen(s);
@@ -134,7 +132,7 @@ void	update_buffer(char *buff)
 
 	ptr = ft_strchr(buff, '\n');
 	if (ptr && *(ptr + 1))
-		ft_memmove(buff, ptr+1, ft_strlen(ptr)+1);
+		ft_memmove(buff, ptr + 1, ft_strlen(ptr) + 1);
 	else
 		*buff = '\0';
 }
@@ -153,7 +151,7 @@ char	*get_next_line(int fd)
 	{
 		size_read = read(fd, buff, BUFFER_SIZE);
 		if (size_read < 0)
-			return (free(line), (NULL));
+			return (free(line), *buff = '\0', (NULL));
 		buff[size_read] = '\0';
 		line = ft_strjoin(line, buff);
 		if (!line || !*line)
@@ -182,8 +180,23 @@ char	*get_next_line(int fd)
 // 		printf("%s", nl);
 // 		free(nl);
 // 		nl = get_next_line(fd);
+// 		break ;
+// 	}
+// 	close(fd);
+// 	free(nl);
+// 	printf("FD Close and starting again\n");
+// 	fd = open("test.txt", O_RDONLY);
+// 	printf("Our FD is: %d\n", fd);
+// 	nl = get_next_line(fd);
+// 	while (nl != NULL)
+// 	{
+// 		printf("%s", nl);
+// 		free(nl);
+// 		nl = get_next_line(fd);
+// 		break ;
 // 	}
 // 	free(nl);
 // 	close(fd);
+
 // 	return (0);
 // }
