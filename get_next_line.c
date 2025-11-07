@@ -6,19 +6,21 @@
 /*   By: jmanani <jmanani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:15:25 by jmanani           #+#    #+#             */
-/*   Updated: 2025/11/07 17:46:19 by jmanani          ###   ########.fr       */
+/*   Updated: 2025/11/07 18:11:37 by jmanani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+char	*ft_substr(char *s, unsigned int start, size_t len)
 {
 	char	*new_str;
 	size_t	str_len;
 	size_t	actual_len;
 	size_t	i;
-
+	char *temp;
+	
+	temp = s;
 	actual_len = len;
 	i = 0;
 	str_len = ft_strlen(s);
@@ -34,6 +36,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	while (*(s + start) && i < actual_len)
 		*new_str++ = *(s + start + (i++));
 	*new_str = '\0';
+	free(s);
 	return (new_str - actual_len);
 }
 
@@ -58,11 +61,9 @@ char	*ft_strjoin(char *s1, char const *s2)
 		return (NULL);
 	if (!s1)
 		return (ft_strdup(s2));
-	if (!s2 || !*s2)
+	if (!s2)
 		return (s1);
 	len = ft_strlen(s1) + ft_strlen(s2);
-	if (!len)
-		return (NULL);
 	new_str = (char *)malloc(sizeof(char) * (len + 1));
 	if (!new_str)
 		return (NULL);
@@ -82,8 +83,6 @@ char	*ft_strdup(const char *src)
 	int		i;
 
 	len = ft_strlen(src);
-	// if(len == 0)
-	// 	return (NULL);
 	dup = (char *)malloc(len + 1);
 	if (!dup)
 		return (0);
@@ -168,23 +167,23 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-int	main(void)
-{
-	int		fd;
-	char	*nl;
+// int	main(void)
+// {
+// 	int		fd;
+// 	char	*nl;
 
-	nl = NULL;
-	fd = -1;
-	fd = open("test.txt", O_RDONLY);
-	printf("Our FD is: %d\n", fd);
-	nl = get_next_line(fd);
-	while (nl != NULL)
-	{
-		printf("%s", nl);
-		free(nl);
-		nl = get_next_line(fd);
-	}
-	free(nl);
-	close(fd);
-	return (0);
-}
+// 	nl = NULL;
+// 	fd = -1;
+// 	fd = open("test.txt", O_RDONLY);
+// 	printf("Our FD is: %d\n", fd);
+// 	nl = get_next_line(fd);
+// 	while (nl != NULL)
+// 	{
+// 		printf("%s", nl);
+// 		free(nl);
+// 		nl = get_next_line(fd);
+// 	}
+// 	free(nl);
+// 	close(fd);
+// 	return (0);
+// }
