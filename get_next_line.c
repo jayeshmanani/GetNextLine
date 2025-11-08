@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmanani <jmanani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jay <jay@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:15:25 by jmanani           #+#    #+#             */
-/*   Updated: 2025/11/07 19:44:01 by jmanani          ###   ########.fr       */
+/*   Updated: 2025/11/08 02:20:59 by jay              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,19 +30,19 @@ void	*ft_memmove(void *dest, const void *src, size_t n)
 		while (n--)
 			((char *)dest)[n] = ((char *)src)[n];
 	}
-	return (dest + 1);
+	return (dest);
 }
 
-void	update_buffer(char *buff)
-{
-	char	*ptr;
+// void	update_buffer(char *buff)
+// {
+// 	char	*ptr;
 
-	ptr = ft_strchr(buff, '\n');
-	if (ptr && *(ptr + 1))
-		ft_memmove(buff, ptr + 1, ft_strlen(ptr + 1) + 1);
-	else
-		*buff = '\0';
-}
+// 	ptr = ft_strchr(buff, '\n');
+// 	if (ptr && *(ptr + 1))
+// 		ft_memmove(buff, ptr + 1, ft_strlen(ptr + 1) + 1);
+// 	else
+// 		*buff = '\0';
+// }
 
 char	*clean_return(char *line, char *buff)
 {
@@ -51,6 +51,35 @@ char	*clean_return(char *line, char *buff)
 	if (buff)
 		*buff = '\0';
 	return (NULL);
+}
+
+char	*create_line(char **line, char *buff, int size_read, int fd)
+{
+	char	*nl_found;
+
+	nl_found = NULL;
+	nl_found = ft_strchr(*line, '\n');
+	while (nl_found == NULL && size_read > 0)
+	{
+		size_read = read(fd, buff, BUFFER_SIZE);
+		if (size_read < 0)
+			return (clean_return(*line, buff));
+		buff[size_read] = '\0';
+		*line = ft_strjoin(*line, buff);
+		if (!*line)
+			return (NULL);
+		nl_found = ft_strchr(*line, '\n');
+	}
+	if ((size_read == 0) && **line == '\0' && *buff == '\0')
+		return (clean_return(*line, buff));
+	if (nl_found)
+	{
+		ft_memmove(buff, nl_found + 1, ft_strlen(nl_found + 1) + 1);
+		*line = ft_substr(*line, 0, nl_found - *line + 1);
+	}
+	else
+		*buff = '\0';
+	return (*line);
 }
 
 char	*get_next_line(int fd)
@@ -63,21 +92,9 @@ char	*get_next_line(int fd)
 		return (NULL);
 	size_read = 1;
 	line = ft_strjoin(NULL, buff);
-	while (ft_strchr(line, '\n') == NULL && size_read > 0)
-	{
-		size_read = read(fd, buff, BUFFER_SIZE);
-		if (size_read < 0)
-			return (clean_return(line, buff));
-		buff[size_read] = '\0';
-		line = ft_strjoin(line, buff);
-		if (!line)
-			return (NULL);
-	}
-	if (size_read == 0 && *line == '\0')
-		return (free(line), NULL);
-	if (ft_strchr(line, '\n'))
-		line = ft_substr(line, 0, ft_strchr(line, '\n') - line + 1);
-	update_buffer(buff);
+	line = create_line(&line, buff, size_read, fd);
+	if (!line)
+		return (NULL);
 	return (line);
 }
 
@@ -99,18 +116,5 @@ char	*get_next_line(int fd)
 // 	}
 // 	free(nl);
 // 	close(fd);
-// 	// printf("FD Close and starting again\n");
-// 	// fd = open("test.txt", O_RDONLY);
-// 	// printf("Our FD is: %d\n", fd);
-// 	// nl = get_next_line(fd);
-// 	// while (nl != NULL)
-// 	// {
-// 	// 	printf("%s", nl);
-// 	// 	free(nl);
-// 	// 	nl = get_next_line(fd);
-// 	// 	break ;
-// 	// }
-// 	// free(nl);
-// 	// close(fd);
 // 	return (0);
 // }

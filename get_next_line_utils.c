@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmanani <jmanani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jay <jay@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:15:37 by jmanani           #+#    #+#             */
-/*   Updated: 2025/11/07 19:42:53 by jmanani          ###   ########.fr       */
+/*   Updated: 2025/11/08 02:18:04 by jay              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,9 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 	if (!s)
 		return (NULL);
 	str_len = ft_strlen(s);
+	if (start >= str_len)
+		return (free(s), ft_strdup(""));
 	actual_len = str_len - start;
-	if (!*s || str_len < actual_len || start > str_len || len == 0
-		|| actual_len == 0)
-		return (ft_strdup(""));
 	if (actual_len > len)
 		actual_len = len;
 	new_str = (char *)malloc(sizeof(char) * (actual_len + 1));
