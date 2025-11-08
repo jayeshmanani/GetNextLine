@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jay <jay@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:15:25 by jmanani           #+#    #+#             */
-/*   Updated: 2025/11/08 02:34:10 by jay              ###   ########.fr       */
+/*   Updated: 2025/11/08 02:35:40 by jay              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 void	*ft_memmove(void *dest, const void *src, size_t n)
 {
@@ -84,15 +84,15 @@ char	*create_line(char **line, char *buff, int size_read, int fd)
 
 char	*get_next_line(int fd)
 {
-	static char	buff[BUFFER_SIZE + 1];
+	static char	buff[1024][BUFFER_SIZE + 1];
 	char		*line;
 	int			size_read;
 
-	if ((fd < 0) || (BUFFER_SIZE <= 0))
+	if ((fd < 0) || fd >= 1024 || (BUFFER_SIZE <= 0))
 		return (NULL);
 	size_read = 1;
-	line = ft_strjoin(NULL, buff);
-	line = create_line(&line, buff, size_read, fd);
+	line = ft_strjoin(NULL, buff[fd]);
+	line = create_line(&line, buff[fd], size_read, fd);
 	if (!line)
 		return (NULL);
 	return (line);
