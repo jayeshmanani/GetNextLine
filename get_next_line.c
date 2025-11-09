@@ -6,7 +6,7 @@
 /*   By: jay <jay@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:15:25 by jmanani           #+#    #+#             */
-/*   Updated: 2025/11/08 02:34:10 by jay              ###   ########.fr       */
+/*   Updated: 2025/11/09 01:29:24 by jay              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,17 +32,6 @@ void	*ft_memmove(void *dest, const void *src, size_t n)
 	}
 	return (dest);
 }
-
-// void	update_buffer(char *buff)
-// {
-// 	char	*ptr;
-
-// 	ptr = ft_strchr(buff, '\n');
-// 	if (ptr && *(ptr + 1))
-// 		ft_memmove(buff, ptr + 1, ft_strlen(ptr + 1) + 1);
-// 	else
-// 		*buff = '\0';
-// }
 
 char	*clean_return(char *line, char *buff)
 {
