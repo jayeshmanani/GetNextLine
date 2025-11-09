@@ -6,7 +6,7 @@
 /*   By: jay <jay@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:15:45 by jmanani           #+#    #+#             */
-/*   Updated: 2025/11/08 02:34:11 by jay              ###   ########.fr       */
+/*   Updated: 2025/11/09 01:40:24 by jay              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,6 @@
 #  define BUFFER_SIZE 10
 # endif
 
-# include <fcntl.h>
-# include <stdarg.h>
-# include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
 

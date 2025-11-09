@@ -6,7 +6,7 @@
 /*   By: jay <jay@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:15:45 by jmanani           #+#    #+#             */
-/*   Updated: 2025/11/09 01:32:43 by jay              ###   ########.fr       */
+/*   Updated: 2025/11/09 01:40:22 by jay              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,6 @@
 #  define MAX_FD 1024
 # endif
 
-# include <fcntl.h>
-# include <stdarg.h>
-# include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
 
