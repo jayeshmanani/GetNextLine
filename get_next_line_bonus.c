@@ -6,7 +6,11 @@
 /*   By: jmanani <jmanani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:15:25 by jmanani           #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/11/10 15:40:20 by jmanani          ###   ########.fr       */
+=======
+/*   Updated: 2025/11/09 01:29:33 by jay              ###   ########.fr       */
+>>>>>>> 3cf35a8df7d69a2f9b0023489248f61bed49dc84
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,17 +36,6 @@ void	*ft_memmove(void *dest, const void *src, size_t n)
 	}
 	return (dest);
 }
-
-// void	update_buffer(char *buff)
-// {
-// 	char	*ptr;
-
-// 	ptr = ft_strchr(buff, '\n');
-// 	if (ptr && *(ptr + 1))
-// 		ft_memmove(buff, ptr + 1, ft_strlen(ptr + 1) + 1);
-// 	else
-// 		*buff = '\0';
-// }
 
 char	*clean_return(char *line, char *buff)
 {
@@ -84,17 +77,28 @@ char	*create_line(char **line, char *buff, int size_read, int fd)
 
 char	*get_next_line(int fd)
 {
-	static char	buff[1024][BUFFER_SIZE + 1];
+	static char	*buff[MAX_FD];
 	char		*line;
 	int			size_read;
 
-	if ((fd < 0) || fd >= 1024 || (BUFFER_SIZE <= 0))
+	if ((fd < 0) || fd >= MAX_FD || (BUFFER_SIZE <= 0))
 		return (NULL);
 	size_read = 1;
+	if (!buff[fd])
+	{
+		buff[fd] = (char *)malloc(BUFFER_SIZE + 1);
+		if (!buff[fd])
+			return (NULL);
+		buff[fd][0] = '\0';
+	}
 	line = ft_strjoin(NULL, buff[fd]);
 	line = create_line(&line, buff[fd], size_read, fd);
-	if (!line)
+	if (!line && buff[fd])
+	{
+		free(buff[fd]);
+		buff[fd] = NULL;
 		return (NULL);
+	}
 	return (line);
 }
 

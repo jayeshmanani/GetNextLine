@@ -6,7 +6,11 @@
 /*   By: jmanani <jmanani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:15:45 by jmanani           #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/11/10 15:40:32 by jmanani          ###   ########.fr       */
+=======
+/*   Updated: 2025/11/09 01:40:22 by jay              ###   ########.fr       */
+>>>>>>> 3cf35a8df7d69a2f9b0023489248f61bed49dc84
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +21,10 @@
 #  define BUFFER_SIZE 10
 # endif
 
-# include <fcntl.h>
-# include <stdarg.h>
-# include <stdio.h>
+# ifndef MAX_FD
+#  define MAX_FD 1024
+# endif
+
 # include <stdlib.h>
 # include <unistd.h>
 
